@@ -1,0 +1,28 @@
+url_antigua;codigo;url_nueva;motivo
+/es/services/renovacion-parque-informatico/;301;/es/#renovacion-parque-informatico;servicio consolidado en el nodo de la portada
+/es/services/soporte-remoto-y-presencial/;301;/es/#soporte-remoto-y-presencial;servicio consolidado en el nodo de la portada
+/es/services/optimizacion-de-equipos/;301;/es/#optimizacion-de-equipos;servicio consolidado en el nodo de la portada
+/es/services/peritaje-informatico/;301;/es/#peritaje-informatico;servicio consolidado en el nodo de la portada
+/es/services/monitorizacion-365x24/;301;/es/#monitorizacion-365x24;servicio consolidado en el nodo de la portada
+/es/services/automatizacion-de-backups/;301;/es/#automatizacion-de-backups;servicio consolidado en el nodo de la portada
+/es/services/consolidacion-de-servidores/;301;/es/#consolidacion-de-servidores;servicio consolidado en el nodo de la portada
+/es/services/recuperacion-de-datos/;301;/es/#recuperacion-de-datos;servicio consolidado en el nodo de la portada
+/es/services/mantenimiento-proactivo/;301;/es/#mantenimiento-proactivo;servicio consolidado en el nodo de la portada
+/en/services/it-fleet-renewal-scheduled/;301;/en/#it-fleet-renewal-scheduled;servicio consolidado en el nodo de la portada
+/en/services/remote-and-in-site-support/;301;/en/#remote-and-in-site-support;servicio consolidado en el nodo de la portada
+/en/services/computer-optimization/;301;/en/#computer-optimization;servicio consolidado en el nodo de la portada
+/en/services/experts-report/;301;/en/#experts-report;servicio consolidado en el nodo de la portada
+/en/services/monitoring-365x24/;301;/en/#monitoring-365x24;servicio consolidado en el nodo de la portada
+/en/services/backup-automatitation/;301;/en/#backup-automatitation;servicio consolidado en el nodo de la portada
+/en/services/server-consolidation/;301;/en/#server-consolidation;servicio consolidado en el nodo de la portada
+/en/services/data-recovery/;301;/en/#data-recovery;servicio consolidado en el nodo de la portada
+/en/services/proactive-maintenance/;301;/en/#proactive-maintenance;servicio consolidado en el nodo de la portada
+/es/contacto/;301;/es/#contacto;contacto nuevo
+/en/contact-us/;301;/en/#contact;contacto nuevo
+/es/aviso-legal/;301;/es/aviso-legal.html;pagina legal nueva
+/es/politica-de-cookies/;301;/es/politica-de-cookies.html;pagina legal nueva
+/en/legal-notice/;301;/en/legal-notice.html;pagina legal nueva
+/en/cookies-policy/;301;/en/cookies-policy.html;pagina legal nueva
+/es/frontpage-spanish/;301;/es/;resto de la instalacion anterior
+/gl/;301;/es/;resto de la instalacion anterior
+/;301;/es/;la raiz servia ingles con un 302 - ahora manda a espanol

@@ -1,0 +1,79 @@
+# =============================================================================
+#  Calidade Systems - .htaccess para convivir con el WordPress existente
+#  Generado el 2026-09-17
+#
+#  Colocar esta web estatica EN LA MISMA carpeta raiz que WordPress, de modo
+#  que existan de verdad /es/index.html, /en/index.html, /assets/, /css/, /js/.
+#
+#  Estas reglas van ANTES del bloque `# BEGIN WordPress`. Con eso basta:
+#    - /es/ y /en/ son directorios reales con index.html -> mod_dir los sirve
+#      y la peticion nunca llega al rewrite de WordPress.
+#    - /es/2019/01/10/slug/ no existe en disco -> cae en el rewrite de
+#      WordPress y se sirve el articulo con 200, igual que hoy.
+#    - las URLs migradas se cortan aqui con un 301 antes de llegar a WP.
+# =============================================================================
+
+Options -MultiViews
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# --- dominio canonico con www ---
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^(.*)$ https://www.calidade.systems/$1 [R=301,L]
+
+# --- la raiz sirve espanol (hoy hace 302 a /en/) ---
+RewriteRule ^$ /es/ [R=301,L]
+
+# --- URLs antiguas migradas ---
+RedirectPermanent /es/services/renovacion-parque-informatico/ /es/#renovacion-parque-informatico
+RedirectPermanent /es/services/soporte-remoto-y-presencial/ /es/#soporte-remoto-y-presencial
+RedirectPermanent /es/services/optimizacion-de-equipos/ /es/#optimizacion-de-equipos
+RedirectPermanent /es/services/peritaje-informatico/ /es/#peritaje-informatico
+RedirectPermanent /es/services/monitorizacion-365x24/ /es/#monitorizacion-365x24
+RedirectPermanent /es/services/automatizacion-de-backups/ /es/#automatizacion-de-backups
+RedirectPermanent /es/services/consolidacion-de-servidores/ /es/#consolidacion-de-servidores
+RedirectPermanent /es/services/recuperacion-de-datos/ /es/#recuperacion-de-datos
+RedirectPermanent /es/services/mantenimiento-proactivo/ /es/#mantenimiento-proactivo
+RedirectPermanent /en/services/it-fleet-renewal-scheduled/ /en/#it-fleet-renewal-scheduled
+RedirectPermanent /en/services/remote-and-in-site-support/ /en/#remote-and-in-site-support
+RedirectPermanent /en/services/computer-optimization/ /en/#computer-optimization
+RedirectPermanent /en/services/experts-report/ /en/#experts-report
+RedirectPermanent /en/services/monitoring-365x24/ /en/#monitoring-365x24
+RedirectPermanent /en/services/backup-automatitation/ /en/#backup-automatitation
+RedirectPermanent /en/services/server-consolidation/ /en/#server-consolidation
+RedirectPermanent /en/services/data-recovery/ /en/#data-recovery
+RedirectPermanent /en/services/proactive-maintenance/ /en/#proactive-maintenance
+RedirectPermanent /es/contacto/ /es/#contacto
+RedirectPermanent /en/contact-us/ /en/#contact
+RedirectPermanent /es/aviso-legal/ /es/aviso-legal.html
+RedirectPermanent /es/politica-de-cookies/ /es/politica-de-cookies.html
+RedirectPermanent /en/legal-notice/ /en/legal-notice.html
+RedirectPermanent /en/cookies-policy/ /en/cookies-policy.html
+RedirectPermanent /es/frontpage-spanish/ /es/
+RedirectPermanent /gl/ /es/
+
+# --- URLs mal formadas que emite su propio sitemap (doble barra) ---
+RedirectPermanent /es//frontpage-spanish /es/
+RedirectPermanent /es/aviso-legal//aviso-legal /es/aviso-legal.html
+RedirectPermanent /es/contacto//contacto /es/#contacto
+RedirectPermanent /es/politica-de-cookies//politica-de-cookies /es/politica-de-cookies.html
+
+</IfModule>
+
+# --- cache de los assets nuevos ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch "\.(svg|png|jpg|jpeg|webp|woff2)$">
+    ExpiresDefault "access plus 30 days"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    ExpiresDefault "access plus 7 days"
+  </FilesMatch>
+</IfModule>
+
+# A partir de aqui, el bloque original de WordPress sin tocar:
+# # BEGIN WordPress
+# ...
+# # END WordPress

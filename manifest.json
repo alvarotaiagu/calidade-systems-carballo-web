@@ -1,0 +1,29 @@
+{
+  "name": "Calidade Systems · Ingeniería Informática",
+  "short_name": "Calidade Systems",
+  "description": "Soporte y servicios informáticos para pymes en Carballo, A Coruña.",
+  "start_url": "es/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F7F9FB",
+  "theme_color": "#F7F9FB",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "assets/img/brand/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/brand/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/brand/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

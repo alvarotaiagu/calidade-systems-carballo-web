@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página no encontrada · Calidade Systems</title>
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="/assets/img/brand/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/brand/icon-32.png" type="image/png" sizes="32x32">
+<meta name="theme-color" content="#F7F9FB">
+<meta name="color-scheme" content="light only">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light only;
+    --blanco: #F7F9FB; --placa: #E3E8EE; --marino: #0C2C5C; --cian: #22B5D8; --gris: #56637A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100svh; display: grid; place-content: center; justify-items: center;
+    gap: 1.2rem; text-align: center; padding: 2rem;
+    background: var(--blanco); color: var(--marino);
+    font-family: "IBM Plex Sans", system-ui, sans-serif; line-height: 1.6;
+    background-image: radial-gradient(circle at 1px 1px, rgba(12,44,92,0.12) 1px, transparent 0);
+    background-size: 26px 26px;
+  }
+  svg.pista { width: 15rem; max-width: 70vw; height: auto; overflow: visible; }
+  .codigo {
+    font-family: "IBM Plex Mono", monospace; font-size: 0.78rem; letter-spacing: 0.1em;
+    color: #0B6E8C; text-transform: lowercase;
+  }
+  h1 {
+    font-family: "Space Grotesk", sans-serif; font-weight: 600;
+    font-size: clamp(1.7rem, 1.2rem + 2.2vw, 2.7rem);
+    line-height: 1.1; letter-spacing: -0.03em; text-wrap: balance; max-width: 22ch;
+  }
+  p { color: var(--gris); max-width: 38ch; font-size: 0.97rem; }
+  .botones { display: flex; flex-wrap: wrap; gap: 0.7rem; justify-content: center; margin-top: 0.6rem; }
+  a {
+    display: inline-block; text-decoration: none; color: var(--marino);
+    border: 1px solid var(--marino); border-radius: 3px;
+    padding: 0.7rem 1.35rem; font-family: "Space Grotesk", sans-serif; font-weight: 500;
+  }
+  a.principal { background: var(--cian); border-color: var(--cian); color: #04283A; }
+</style>
+</head>
+<body>
+  <svg class="pista" viewBox="0 0 320 90" role="img" aria-label="Una pista de circuito cortada">
+    <g fill="none" stroke="#9AAEC8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 45 H70 L92 23 H130"/>
+      <path d="M190 67 H228 L250 45 H312"/>
+    </g>
+    <circle cx="8" cy="45" r="7" fill="#F7F9FB" stroke="#9AAEC8" stroke-width="4"/>
+    <circle cx="312" cy="45" r="7" fill="#22B5D8" stroke="#22B5D8" stroke-width="4"/>
+    <g stroke="#C9553C" stroke-width="4" stroke-linecap="round">
+      <path d="M144 18 L176 72"/><path d="M176 18 L144 72"/>
+    </g>
+  </svg>
+  <p class="codigo">error 404 · pista cortada</p>
+  <h1>Esta dirección no lleva a ningún nodo</h1>
+  <p>La página que buscabas no existe o ha cambiado de sitio. Los artículos del cuaderno técnico sí siguen donde estaban.</p>
+  <div class="botones">
+    <a class="principal" href="/es/">Ir al inicio</a>
+    <a href="/es/#contacto">Contacto</a>
+    <a href="/en/" hreflang="en" lang="en">English</a>
+  </div>
+<script>
+  /* En produccion (calidade.systems) las rutas absolutas de esta pagina son las
+     correctas: el 404 se sirve desde cualquier profundidad. En una "project
+     page" de GitHub el sitio cuelga de /<repo>/, asi que hay que anteponerlo. */
+  (function () {
+    if (!/\.github\.io$/.test(location.hostname)) return;
+    var base = "/" + location.pathname.split("/")[1];
+    document.querySelectorAll('a[href^="/"], link[href^="/"]').forEach(function (el) {
+      el.setAttribute("href", base + el.getAttribute("href"));
+    });
+  })();
+</script>
+</body>
+</html>

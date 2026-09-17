@@ -1,0 +1,54 @@
+# Mapa de redirecciones 301 - Calidade Systems
+# Generado el 2026-09-17. Formato: `map` de nginx (clave  valor;).
+# Uso: include /etc/nginx/calidade/redirecciones-301.map; dentro de un bloque map.
+# Ninguna URL antigua debe devolver 404: las 18 de servicios, las 2 de
+# contacto y las 4 legales estan todas aqui. Los 40 articulos del blog NO
+# se redirigen: los sigue sirviendo WordPress con un 200 y su URL intacta.
+
+# --- 9 servicios en espanol -> ancla del nodo en la portada ES ---
+/es/services/renovacion-parque-informatico/          /es/#renovacion-parque-informatico;
+/es/services/soporte-remoto-y-presencial/            /es/#soporte-remoto-y-presencial;
+/es/services/optimizacion-de-equipos/                /es/#optimizacion-de-equipos;
+/es/services/peritaje-informatico/                   /es/#peritaje-informatico;
+/es/services/monitorizacion-365x24/                  /es/#monitorizacion-365x24;
+/es/services/automatizacion-de-backups/              /es/#automatizacion-de-backups;
+/es/services/consolidacion-de-servidores/            /es/#consolidacion-de-servidores;
+/es/services/recuperacion-de-datos/                  /es/#recuperacion-de-datos;
+/es/services/mantenimiento-proactivo/                /es/#mantenimiento-proactivo;
+
+# --- 9 servicios en ingles -> ancla del nodo en la portada EN ---
+/en/services/it-fleet-renewal-scheduled/             /en/#it-fleet-renewal-scheduled;
+/en/services/remote-and-in-site-support/             /en/#remote-and-in-site-support;
+/en/services/computer-optimization/                  /en/#computer-optimization;
+/en/services/experts-report/                         /en/#experts-report;
+/en/services/monitoring-365x24/                      /en/#monitoring-365x24;
+/en/services/backup-automatitation/                  /en/#backup-automatitation;
+/en/services/server-consolidation/                   /en/#server-consolidation;
+/en/services/data-recovery/                          /en/#data-recovery;
+/en/services/proactive-maintenance/                  /en/#proactive-maintenance;
+
+# --- contacto ---
+/es/contacto/                                        /es/#contacto;
+/en/contact-us/                                      /en/#contact;
+
+# --- paginas legales ---
+/es/aviso-legal/                                     /es/aviso-legal.html;
+/es/politica-de-cookies/                             /es/politica-de-cookies.html;
+/en/legal-notice/                                    /en/legal-notice.html;
+/en/cookies-policy/                                  /en/cookies-policy.html;
+
+# --- restos de la instalacion actual ---
+# /es/frontpage-spanish/ ya devuelve 301 en WordPress; se deja explicito
+# por si se desactiva el plugin. /gl/ existe y esta vacia: se manda a /es/
+# y no se declara en hreflang hasta que el cliente aporte textos.
+/es/frontpage-spanish/                               /es/;
+/gl/                                                 /es/;
+
+# --- URLs mal formadas que emite su propio sitemap (doble barra y slug
+#     repetido). Hoy encadenan dos 301; con estas entradas se resuelven en uno.
+#     nginx fusiona las barras (merge_slashes on), asi que $uri llega ya con
+#     una sola barra: por eso se escriben en esa forma.
+/es/frontpage-spanish                                /es/;
+/es/aviso-legal/aviso-legal                          /es/aviso-legal.html;
+/es/contacto/contacto                                /es/#contacto;
+/es/politica-de-cookies/politica-de-cookies          /es/politica-de-cookies.html;

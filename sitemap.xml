@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Indice de sitemaps de Calidade Systems.
+     Las paginas nuevas viven en sitemap-paginas.xml; los 40 articulos
+     los sigue generando el WordPress en post-sitemap.xml y no se tocan.
+     No se incluyen services-sitemap.xml ni page-sitemap.xml: sus URLs
+     ahora devuelven 301 y un sitemap no debe listar redirecciones. -->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://www.calidade.systems/sitemap-paginas.xml</loc>
+    <lastmod>2026-09-17</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.calidade.systems/post-sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.calidade.systems/category-sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.calidade.systems/post_tag-sitemap.xml</loc>
+  </sitemap>
+</sitemapindex>

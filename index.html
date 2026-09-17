@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calidade Systems · Ingeniería informática en Carballo</title>
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://www.calidade.systems/es/">
+<meta http-equiv="refresh" content="0; url=es/">
+<link rel="icon" href="assets/img/brand/icon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/brand/icon-32.png" type="image/png" sizes="32x32">
+<meta name="theme-color" content="#F7F9FB">
+<meta name="color-scheme" content="light only">
+<style>
+  :root { color-scheme: light only; }
+  body {
+    margin: 0; min-height: 100svh; display: grid; place-content: center; gap: 1.1rem;
+    justify-items: center; text-align: center; padding: 2rem;
+    background: #F7F9FB; color: #0C2C5C;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background-image: radial-gradient(circle at 1px 1px, rgba(12,44,92,0.12) 1px, transparent 0);
+    background-size: 26px 26px;
+  }
+  img { width: 16rem; max-width: 70vw; height: auto; }
+  p { margin: 0; font-size: 0.95rem; color: #56637A; }
+  .idiomas { display: flex; gap: 0.6rem; margin-top: 0.4rem; }
+  a {
+    display: inline-block; text-decoration: none; color: #0C2C5C;
+    border: 1px solid #E3E8EE; background: #fff; border-radius: 3px;
+    padding: 0.6rem 1.2rem; font-weight: 500;
+  }
+  a.principal { background: #22B5D8; border-color: #22B5D8; color: #04283A; }
+</style>
+</head>
+<body>
+  <img src="assets/img/brand/calidade-logo.svg" alt="Calidade Systems">
+  <p>Te estamos llevando a la versión en español.<br><span lang="en">Taking you to the Spanish version.</span></p>
+  <div class="idiomas">
+    <a class="principal" href="es/" hreflang="es">Español</a>
+    <a href="en/" hreflang="en" lang="en">English</a>
+  </div>
+  <script>
+    /* En el servidor real esta página se sustituye por un 301 a /es/
+       (ver seo/nginx-calidade.conf). Este archivo es el plan B para
+       alojamientos estáticos donde no se pueden escribir redirecciones. */
+    location.replace("es/");
+  </script>
+</body>
+</html>

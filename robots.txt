@@ -1,0 +1,19 @@
+# Calidade Systems - https://www.calidade.systems/
+# La portada y los servicios son estaticos; el cuaderno tecnico lo sigue
+# sirviendo el WordPress del mismo dominio. Ambos se indexan.
+
+User-agent: *
+Allow: /
+
+# Nada que rastrear en la trastienda de WordPress
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /xmlrpc.php
+Disallow: /?s=
+Disallow: /*?replytocom=
+Allow: /wp-admin/admin-ajax.php
+
+# La API REST se usa desde la propia portada; no aporta nada indexarla
+Disallow: /wp-json/
+
+Sitemap: https://www.calidade.systems/sitemap.xml
