@@ -29,6 +29,9 @@ circuito con nodos. El sitio entero se comporta como esa placa.
   pad y saca un *stub* hacia ella.
 - En monitorización, un nodo **late** cada 2 s con opacidad y escala mínimas.
   Es lo más rápido que parpadea nada en todo el sitio.
+- El **avance del recorrido** se lee en el mismo idioma: una pista bajo la
+  cabecera que se llena de marino a cian, un nodo que la recorre y una cifra
+  mono (`037%`) junto al selector de idioma.
 
 Fondo claro siempre (`#F7F9FB`). No hay modo oscuro y no se ofrece.
 
@@ -79,9 +82,23 @@ screenshots/
 - **La pila de servicios**: el pegajoso es el `<li>`, y su `margin-bottom` es
   el recorrido. La altura mínima va en la tarjeta, no en el `<li>`, o quedan
   tarjetas fantasma.
+- **La última tarjeta necesita `.stack::after`.** El `margin-bottom` del último
+  hijo no le da recorrido: el bloque contenedor crece con él, su borde inferior
+  no se aleja y la tarjeta se despega en el mismo frame en que llega. El
+  recorrido tiene que ser contenido de verdad.
+- **Todas las tarjetas llevan el mismo margen, también la última.** La
+  restricción del pegajoso se aplica sobre la *caja de margen*: si a la última
+  se le quita el margen, su caja queda 38vh más corta y las tarjetas se sueltan
+  escalonadas — las de atrás salen antes, suben por delante de la activa y se
+  las ve asomar por arriba.
 - Al apilarse, las tarjetas solo escalan (`scale` + `y`). **Nunca opacidad con
   `scrub`**: un recálculo del trigger puede dejar una tarjeta pegajosa
-  invisible.
+  invisible. Y el `y` tiene que ser **positivo**: con `transform-origin` en el
+  borde superior, un `y` negativo deja el canto de la saliente asomando por
+  encima de la entrante.
+- La barra de avance se dibuja con `transform: scaleX()`, no con
+  `stroke-dasharray` sobre un `viewBox` estirado: una barra recta deformada de
+  forma no uniforme rompe el dasharray y sale a trozos.
 - **Todo lo que se oculta para animar vive bajo `html.has-motion`**, que solo se
   enciende desde el JavaScript. Sin GSAP, sin Lenis o con movimiento reducido,
   la página se ve entera.
@@ -116,10 +133,16 @@ originales están en `assets/img/photos/_creditos.json`.
 
 ## Comprobado
 
-55 comprobaciones automáticas con Playwright, 0 fallos: hreflang recíproco,
+64 comprobaciones automáticas con Playwright, 0 fallos: hreflang recíproco,
 JSON-LD, respaldo del blog con `route.abort()`, cookies con rechazo real, mapa
 bajo demanda, formulario, caída de GSAP, movimiento reducido y 400 px. El
 detalle está en [`seo/MIGRACION-SEO.md`](seo/MIGRACION-SEO.md) §8.
+
+Entre ellas, cuatro que vigilan justo lo que ya se rompió una vez: que las
+nueve tarjetas llegan a pegarse, que la última **se queda** pegada en lugar de
+atravesar el tope, que ninguna tarjeta de atrás asoma por fuera de la activa, y
+que el avance del recorrido llega al 100 % también sin GSAP y con movimiento
+reducido.
 
 ## Cómo verlo
 

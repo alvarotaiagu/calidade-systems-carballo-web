@@ -138,12 +138,23 @@
   /* ====================================================================== */
   (function cabeceraYFab() {
     var cabecera = $(".cabecera"), fab = $(".fab"), hero = $(".hero");
+    var barra = $("[data-progreso]"), cifra = $("[data-progreso-cifra]");
     var pendiente = false;
     function pintar() {
       pendiente = false;
       var y = window.pageYOffset;
       if (cabecera) cabecera.classList.toggle("pegada", y > 24);
       if (fab && hero) fab.classList.toggle("visible", y > hero.offsetHeight * 0.7);
+
+      /* Cuanto recorrido llevas. Es informacion, no adorno: se sigue
+         actualizando con movimiento reducido y sin GSAP, igual que el reloj. */
+      if (barra || cifra) {
+        var total = Math.max(0, html.scrollHeight - window.innerHeight);
+        var p = total > 0 ? Math.min(1, Math.max(0, y / total)) : 0;
+        html.style.setProperty("--progreso", p.toFixed(4));
+        if (barra) barra.classList.toggle("visible", y > 24);
+        if (cifra) cifra.textContent = ("00" + Math.round(p * 100)).slice(-3) + "%";
+      }
     }
     window.addEventListener("scroll", function () {
       if (!pendiente) { pendiente = true; requestAnimationFrame(pintar); }
@@ -505,10 +516,16 @@
       items.forEach(function (it, i) {
         if (i === items.length - 1) return;
         var tarjeta = $(".nodo-tarjeta", it);
+        /* La tarjeta que sale se encoge y se hunde un poco. El desplazamiento
+           tiene que ser HACIA ABAJO: con transform-origin en el borde superior,
+           un `y` negativo deja su canto asomando por encima de la que entra y
+           se ve una raya. Con +6 queda tapada por los cuatro lados. */
         gsap.to(tarjeta, {
-          scale: 0.955, y: -8, ease: "none",
+          scale: 0.955, y: 6, ease: "none",
           scrollTrigger: {
-            trigger: items[i + 1], start: "top 80%", end: "top " + Math.round(topePegajoso()),
+            trigger: items[i + 1],
+            start: "top 80%",
+            end: function () { return "top " + Math.round(topePegajoso()); },
             scrub: 0.5, invalidateOnRefresh: true
           }
         });

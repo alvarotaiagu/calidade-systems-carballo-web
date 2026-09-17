@@ -194,6 +194,42 @@ input, textarea { font: inherit; color: inherit; }
 }
 .nav-movil a:last-child { border-bottom: 0; color: var(--gris-txt); font-size: 1rem; }
 
+/* ------------------------------------------------- avance del recorrido
+   Cuanto scroll llevas, en el idioma de la placa: una pista que se llena y
+   un nodo que la recorre. Se dibuja con transform:scaleX, no con
+   stroke-dasharray sobre un viewBox estirado: una barra recta estirada de
+   forma no uniforme rompe el truco del dasharray y sale a trozos. */
+.progreso {
+  position: fixed;
+  top: calc(var(--nav-h) - 2px); left: 0; right: 0;
+  height: 2px; z-index: 151; pointer-events: none;
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.progreso.visible { opacity: 1; }
+.progreso-pista {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, var(--marino), var(--cian));
+  transform: scaleX(var(--progreso, 0));
+  transform-origin: left center;
+}
+.progreso-nodo {
+  position: absolute; top: 50%;
+  /* el recorrido se descuenta el ancho del propio nodo: asi no se sale del
+     viewport ni al 0 % ni al 100 % (nada de translate(-50%)) */
+  left: calc(var(--progreso, 0) * (100% - 7px));
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--cian);
+  box-shadow: 0 0 0 3px rgba(34, 181, 216, 0.2);
+  transform: translateY(-50%);
+}
+.progreso-cifra {
+  color: var(--gris-txt);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  display: none;
+}
+@media (min-width: 62rem) { .progreso-cifra { display: inline; } }
+
 /* --------------------------------------------------------------- botones */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
@@ -334,7 +370,7 @@ input, textarea { font: inherit; color: inherit; }
 }
 
 /* ------------------------------------------------- servicios: pila nodos */
-.servicios { padding-block: clamp(4rem, 9vw, 7rem) clamp(3rem, 7vw, 6rem); }
+.servicios { padding-block: clamp(4rem, 9vw, 7rem) clamp(1.5rem, 3vw, 3rem); }
 .stack-zona {
   width: 100%; max-width: var(--ancho); margin-inline: auto;
   padding-inline: var(--gutter);
@@ -360,7 +396,20 @@ input, textarea { font: inherit; color: inherit; }
   top: calc(var(--nav-h) + 1.5rem);
   margin-bottom: 38vh;
 }
-.stack-item:last-child { margin-bottom: 0; }
+/* Dos cosas que hay que dejar exactamente asi:
+
+   1. El recorrido del ultimo pegajoso tiene que ser CONTENIDO. El margen del
+      ultimo hijo no sirve: el bloque contenedor crece con el, asi que su borde
+      inferior no se aleja y la tarjeta se despega en el mismo frame en que
+      llega. De ahi el ::after.
+
+   2. TODAS las tarjetas llevan el mismo margen, tambien la ultima. La
+      restriccion del pegajoso se aplica sobre la CAJA DE MARGEN: si a la
+      ultima se le quita el margen, su caja es 38vh mas corta que la de las
+      demas y se sueltan escalonadas. Las de atras salen antes, suben por
+      delante de la activa y se ven asomar por arriba. Con el margen igualado
+      se sueltan todas en el mismo pixel de scroll. */
+.stack::after { content: ""; display: block; height: 38vh; }
 
 .nodo-tarjeta {
   background: var(--blanco-puro);
@@ -701,6 +750,7 @@ html.has-motion .traza-caja .traza-via { opacity: 0; }
   .stack-zona { grid-template-columns: 1.6rem minmax(0, 1fr); gap: 0.5rem; }
   .nodo-tarjeta { min-height: 0; padding: 1.25rem 1.1rem; }
   .stack-item { margin-bottom: 30vh; }
+  .stack::after { height: 30vh; }
   .cita-grande p::before, .cita-grande p::after { content: none; }
   .fab { font-size: 0.75rem; padding: 0.65rem 0.9rem; }
   .latido { position: static; transform: none; margin-top: 0.9rem; justify-content: center; }
