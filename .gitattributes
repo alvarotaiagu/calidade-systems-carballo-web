@@ -1,0 +1,13 @@
+* text=auto eol=lf
+
+# Estos se despliegan en un servidor Linux: nunca con CRLF
+*.conf  text eol=lf
+*.map   text eol=lf
+*.htaccess text eol=lf
+seo/apache-htaccess.txt text eol=lf
+robots.txt text eol=lf
+*.xml   text eol=lf
+
+# Binarios
+*.png binary
+*.jpg binary
