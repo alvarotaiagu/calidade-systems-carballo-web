@@ -83,10 +83,33 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css?v=1">
+<!-- Sin JavaScript no hay quien levante la cortina: mejor no ensenarla. -->
+<noscript><style>.cortina { display: none !important; }</style></noscript>
 </head>
 <body data-lang="es">
 
 <a class="salto" href="#servicios">Saltar a los servicios</a>
+
+<!-- Cortina de entrada: barrido de senal y salida en bandas diagonales.
+     Se retira SIEMPRE desde js/main.js; el script de abajo es la red de
+     seguridad por si main.js no llega a cargarse. -->
+<div class="cortina" data-cortina aria-hidden="true">
+  <div class="cortina-bandas" aria-hidden="true">
+    <span class="cortina-banda"></span>
+    <span class="cortina-banda"></span>
+    <span class="cortina-banda"></span>
+    <span class="cortina-banda"></span>
+    <span class="cortina-banda"></span>
+    <span class="cortina-banda"></span>
+    <span class="cortina-banda"></span>
+  </div>
+  <div class="cortina-centro">
+    <img class="cortina-simbolo" src="../assets/img/brand/calidade-simbolo.svg" alt="" width="412" height="276">
+    <span class="cortina-barrido" aria-hidden="true"></span>
+    <p class="cortina-pie">Carballo &middot; A Coru&ntilde;a</p>
+  </div>
+</div>
+<script>setTimeout(function(){var c=document.querySelector('[data-cortina]');if(c&&!c.hidden){c.hidden=true;document.documentElement.classList.remove('cortina-puesta');}},6000);</script>
 
 <div class="cookie-banner" hidden>
   <div class="cookie-txt">

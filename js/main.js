@@ -865,11 +865,84 @@
     gsap.ticker.lagSmoothing(0);
   }
 
+
+  /* ======================================================================
+     Cortina de entrada (preloader)
+     ----------------------------------------------------------------------
+     Gesto propio: barrido de senal. El simbolo se enciende, la linea cian
+     se abre y el panel sale en BANDAS DIAGONALES que suben escalonadas.
+     A proposito no dibuja pistas: eso ya lo hace la entrada del hero.
+
+     Dos momentos distintos:
+       - alAbrirse(fn) -> cuando las bandas EMPIEZAN a subir, para que las
+         trazas del hero ya se esten enrutando cuando asoma la pagina.
+       - retirar()     -> al terminar: quita el nodo, devuelve el scroll y
+         refresca ScrollTrigger, que midio con overflow:hidden.
+     Se retira SIEMPRE (sin GSAP, con reduced-motion o por el timeout de
+     seguridad): una cortina atascada tapa el sitio entero.
+     ====================================================================== */
+  var cortina = (function initCortina() {
+    var el = $("[data-cortina]");
+    var espera = [];
+    var abierta = false;
+    var fuera = false;
+
+    function abrir() {
+      if (abierta) return;
+      abierta = true;
+      espera.splice(0).forEach(function (fn) { try { fn(); } catch (e) {} });
+    }
+    function retirar() {
+      abrir();
+      if (fuera) return;
+      fuera = true;
+      if (el) el.hidden = true;
+      html.classList.remove("cortina-puesta");
+      if (lenis) lenis.start();
+      if (gsapReady) ScrollTrigger.refresh();
+    }
+
+    var api = { alAbrirse: function (fn) { return abierta ? fn() : espera.push(fn); } };
+    if (!el || !motion) { retirar(); return api; }
+
+    html.classList.add("cortina-puesta");
+
+    var centro = $(".cortina-centro", el);
+    var simbolo = $(".cortina-simbolo", el);
+    var barrido = $(".cortina-barrido", el);
+    var pie = $(".cortina-pie", el);
+    var bandas = $$(".cortina-banda", el);
+    var SUBE = 1.3;
+
+    var tl = gsap.timeline({ onComplete: retirar });
+    if (simbolo) tl.to(simbolo, { opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" }, 0);
+    if (barrido) tl.to(barrido, { scaleX: 1, duration: 0.8, ease: "power2.inOut" }, 0.45);
+    if (pie) tl.to(pie, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.7);
+
+    tl.add(abrir, SUBE);
+    if (centro) tl.to(centro, { opacity: 0, duration: 0.35, ease: "power2.in" }, SUBE);
+    if (bandas.length) {
+      /* cada banda sube la ventana entera, no su propia altura: si subiera
+         solo lo suyo no destaparia nada */
+      tl.to(bandas, {
+        y: function () { return -(window.innerHeight * 1.25); },
+        duration: 0.95,
+        ease: "expo.inOut",
+        stagger: { each: 0.055, from: "start" }
+      }, SUBE + 0.1);
+    }
+
+    setTimeout(retirar, 5200);
+    return api;
+  })();
+
   function arrancar() {
     construirTrazas();
     montarMapa();
     montarApariciones();
-    entradaHero();
+    /* la entrada del hero no arranca hasta que las bandas empiezan a subir:
+       lo primero que se ve de la pagina ya esta en movimiento */
+    cortina.alAbrirse(entradaHero);
     latido();
     if (gsapReady) ScrollTrigger.refresh();
   }

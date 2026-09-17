@@ -119,6 +119,47 @@ input, textarea { font: inherit; color: inherit; }
 .btn-cookie-no { border: 1px solid rgba(220, 230, 242, 0.45); color: #DCE6F2; }
 .btn-cookie-no:hover { border-color: #DCE6F2; background: rgba(255,255,255,0.06); }
 
+/* ======================================================================
+   Cortina de entrada (preloader)
+   Barrido de senal: una linea cian recorre el panel de arriba abajo una
+   sola vez, el simbolo se enciende y el wordmark se descubre. Sale en
+   BANDAS DIAGONALES (columnas con skew) que suben escalonadas, como un
+   barrido por la pista.
+   A proposito no dibuja trazas: eso ya lo hace el hero y repetirlo le
+   restaria.
+   Los estados «vacios» viven bajo html.has-motion: sin GSAP la cortina se
+   retira al instante y nadie ve un panel a medias.
+   Ojo: .cortina usa display:grid, asi que [hidden] necesita su regla.
+   ====================================================================== */
+/* sin fondo propio: el color lo ponen las bandas. Si el panel tuviera
+   fondo, al subir las bandas se destaparia el panel y no la pagina. */
+.cortina { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; overflow: hidden; }
+.cortina[hidden] { display: none; }
+html.cortina-puesta { overflow: hidden; }
+
+/* las bandas se pasan de ancho y van sesgadas: al subir, el corte que
+   deja cada una es diagonal, no recto */
+.cortina-bandas { position: absolute; top: -6%; bottom: -6%; left: -12%; right: -12%; display: flex; }
+.cortina-banda {
+  flex: 1 1 0;
+  background: linear-gradient(180deg, var(--marino-alto) 0%, var(--marino) 55%, #071E42 100%);
+  transform: skewX(-11deg);
+  border-left: 1px solid rgba(34,181,216,.07);
+  will-change: transform;
+}
+
+.cortina-centro { position: relative; display: grid; justify-items: center; gap: 1.3rem; padding: 0 1.5rem; text-align: center; }
+.cortina-simbolo { width: min(52vw, 20rem); height: auto; }
+.cortina-barrido { display: block; width: min(46vw, 260px); height: 2px; background: linear-gradient(90deg, transparent, var(--cian), transparent); box-shadow: 0 0 14px rgba(34,181,216,.6); transform-origin: 50% 50%; }
+.cortina-pie { font-family: var(--mono, ui-monospace, monospace); font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; color: rgba(247,249,251,.55); }
+
+html.has-motion .cortina-simbolo { opacity: 0; transform: scale(.94); }
+html.has-motion .cortina-barrido { transform: scaleX(0); }
+html.has-motion .cortina-pie { opacity: 0; }
+
+/* con movimiento reducido no debe verse ni un fotograma */
+@media (prefers-reduced-motion: reduce) { .cortina { display: none; } }
+
 /* ------------------------------------------------------------- cabecera */
 .cabecera {
   position: fixed; top: 0; left: 0; right: 0; z-index: 150;
