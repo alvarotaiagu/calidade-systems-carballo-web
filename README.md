@@ -29,9 +29,11 @@ circuito con nodos. El sitio entero se comporta como esa placa.
   pad y saca un *stub* hacia ella.
 - En monitorización, un nodo **late** cada 2 s con opacidad y escala mínimas.
   Es lo más rápido que parpadea nada en todo el sitio.
-- El **avance del recorrido** se lee en el mismo idioma: una pista bajo la
-  cabecera que se llena de marino a cian, un nodo que la recorre y una cifra
-  mono (`037%`) junto al selector de idioma.
+- El **avance del recorrido** es un mapa de la placa: un riel a la derecha con
+  un pad por sección, el cobre que sube de marino a cian, un nodo que viaja por
+  delante y las etiquetas que salen al acercar el ratón. Se puede saltar a
+  cualquier sección pulsando su pad. En móvil no cabe: allí queda una pista
+  fina bajo la cabecera, y la cifra mono (`037%`) vive en el propio encabezado.
 
 Fondo claro siempre (`#F7F9FB`). No hay modo oscuro y no se ofrece.
 
@@ -99,6 +101,16 @@ screenshots/
 - La barra de avance se dibuja con `transform: scaleX()`, no con
   `stroke-dasharray` sobre un `viewBox` estirado: una barra recta deformada de
   forma no uniforme rompe el dasharray y sale a trozos.
+- **El mapa se llama `.recorrido`, no `.mapa`.** `.mapa` ya era la caja del
+  mapa de Google en contacto: al repetir el nombre, el `position:fixed` y el
+  `visibility:hidden` del uno dejaban al otro invisible. Hay una comprobación
+  que vigila justo eso.
+- Los pads del mapa **no** van en la proporción cruda del documento: la pila de
+  los nueve servicios se come media página y dejaría cinco pads apiñados abajo.
+  Cada sección ocupa un tramo igual del riel y el nodo se interpola dentro de
+  su tramo, así que sigue cayendo sobre el pad al entrar en cada sección
+  (desvío medido: menos de 1 px). La cifra y la pista de móvil sí usan el
+  porcentaje real.
 - **Todo lo que se oculta para animar vive bajo `html.has-motion`**, que solo se
   enciende desde el JavaScript. Sin GSAP, sin Lenis o con movimiento reducido,
   la página se ve entera.
@@ -127,22 +139,26 @@ concretas de monitorización y backup, textos de las 19 reseñas de Google,
 razón social, NIF/CIF y datos registrales, y el destino del formulario.
 
 **Fotografía:** seis imágenes de banco (Pexels, licencia gratuita para uso
-comercial) con tratamiento de color propio hacia el frío-limpio. Están
+comercial) con tratamiento de color propio hacia el frío-limpio. Todas se
+publican con una proporción fija, para que ninguna se estire a lo alto al
+rellenar su fila del grid. Están
 etiquetadas como archivo en la propia página. Los créditos y los identificadores
 originales están en `assets/img/photos/_creditos.json`.
 
 ## Comprobado
 
-64 comprobaciones automáticas con Playwright, 0 fallos: hreflang recíproco,
+71 comprobaciones automáticas con Playwright, 0 fallos: hreflang recíproco,
 JSON-LD, respaldo del blog con `route.abort()`, cookies con rechazo real, mapa
 bajo demanda, formulario, caída de GSAP, movimiento reducido y 400 px. El
 detalle está en [`seo/MIGRACION-SEO.md`](seo/MIGRACION-SEO.md) §8.
 
-Entre ellas, cuatro que vigilan justo lo que ya se rompió una vez: que las
-nueve tarjetas llegan a pegarse, que la última **se queda** pegada en lugar de
-atravesar el tope, que ninguna tarjeta de atrás asoma por fuera de la activa, y
-que el avance del recorrido llega al 100 % también sin GSAP y con movimiento
-reducido.
+Entre ellas, once que vigilan justo lo que ya se rompió una vez: que las nueve
+tarjetas llegan a pegarse, que la última **se queda** pegada en lugar de
+atravesar el tope, que ninguna tarjeta de atrás asoma por fuera de la activa,
+que la caja del mapa de Google no se queda invisible por un choque de nombres
+de clase, que el nodo del mapa cae sobre el pad de su sección, que la foto de
+contacto es una banda y no una columna alta, y que el avance llega al 100 %
+también sin GSAP y con movimiento reducido.
 
 ## Cómo verlo
 

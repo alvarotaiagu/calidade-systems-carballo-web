@@ -209,7 +209,7 @@ Sobre el sitio real, hoy:
 - La API REST contesta y admite CORS (refleja el `Origin`), aunque en
   producción la llamada será del mismo dominio y no hará falta.
 
-Sobre la web nueva, con Playwright (64 comprobaciones, 0 fallos):
+Sobre la web nueva, con Playwright (71 comprobaciones, 0 fallos):
 
 - `hreflang` recíproco y `x-default` al español en las 6 páginas; ninguna
   declara `gl`; todas tienen `title`, `description` y un solo `<h1>`.
@@ -234,7 +234,8 @@ Sobre la web nueva, con Playwright (64 comprobaciones, 0 fallos):
   lugar de atravesar el tope, y ninguna tarjeta de atrás asoma por fuera de la
   activa.
 - El avance del recorrido llega al 100 % con GSAP, sin GSAP y con movimiento
-  reducido.
+  reducido; su mapa monta un pad por sección, los reparte por igual y el nodo
+  cae sobre el pad de la sección en la que estás.
 
 ---
 

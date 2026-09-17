@@ -155,6 +155,7 @@
         if (barra) barra.classList.toggle("visible", y > 24);
         if (cifra) cifra.textContent = ("00" + Math.round(p * 100)).slice(-3) + "%";
       }
+      pintarMapa(y);
     }
     window.addEventListener("scroll", function () {
       if (!pendiente) { pendiente = true; requestAnimationFrame(pintar); }
@@ -538,6 +539,134 @@
   })();
 
   /* ======================================================================
+     10b · el mapa de la placa
+     El avance del recorrido con forma de circuito: un riel con un pad por
+     seccion, colocado en la proporcion exacta que ocupa esa seccion en el
+     documento. Asi, cuando el nodo viajero llega a un pad, el visitante esta
+     justo entrando en esa seccion: la posicion no es decorativa, es la
+     misma cuenta que pinta la barra.
+     ====================================================================== */
+  var mapa = null;
+  var lenis = null;
+
+  function montarMapa() {
+    if (mapa && mapa.caja) mapa.caja.remove();
+    mapa = null;
+    if (window.innerWidth < 992) return;
+
+    /* las secciones y sus nombres salen de la propia navegacion, para que no
+       haya dos listas que mantener */
+    var destinos = [{ id: "inicio", texto: LANG === "en" ? "top" : "inicio" }];
+    $$(".cabecera .nav a").forEach(function (a) {
+      var href = a.getAttribute("href") || "";
+      if (href.charAt(0) !== "#") return;
+      destinos.push({ id: href.slice(1), texto: a.textContent.trim() });
+    });
+
+    var caja = document.createElement("div");
+    caja.className = "recorrido";
+    caja.setAttribute("aria-hidden", "true");
+    var riel = document.createElement("div");
+    riel.className = "recorrido-riel";
+    var cobre = document.createElement("span");
+    cobre.className = "recorrido-cobre";
+    riel.appendChild(cobre);
+
+    /* Los pads NO van en la proporcion cruda del documento: la pila de los
+       nueve servicios se come media pagina y dejaria cinco pads apinados
+       abajo y un palmo de riel vacio. Cada seccion ocupa un tramo igual del
+       riel, y el nodo se interpola DENTRO de su tramo segun lo que lleves
+       recorrido de esa seccion. Asi el reparto es legible y, aun asi, el
+       nodo cae exactamente sobre el pad al entrar en cada seccion.
+       La cifra y la pista de movil siguen usando el porcentaje real. */
+    var secciones = [];
+    destinos.forEach(function (d) {
+      var sec = document.getElementById(d.id);
+      if (sec) secciones.push({ id: d.id, texto: d.texto, sec: sec });
+    });
+    if (!secciones.length) return;
+    var tramo = 1 / secciones.length;
+
+    var puntos = [];
+    secciones.forEach(function (d, i) {
+      var sec = d.sec;
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "recorrido-punto";
+      b.style.top = (i * tramo * 100).toFixed(3) + "%";
+      b.tabIndex = -1;                      /* la navegacion accesible ya esta en la cabecera */
+      var et = document.createElement("span");
+      et.className = "recorrido-et mono";
+      et.textContent = d.texto;
+      var pad = document.createElement("span");
+      pad.className = "recorrido-pad";
+      b.appendChild(et);
+      b.appendChild(pad);
+      b.addEventListener("click", function () {
+        var destino = document.getElementById(d.id);
+        if (!destino) return;
+        var y = absTop(destino) - navH();
+        if (lenis && lenis.scrollTo) lenis.scrollTo(y, { duration: 1.1 });
+        else window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+      });
+      riel.appendChild(b);
+      puntos.push({ el: b, sec: sec });
+    });
+
+    var nodo = document.createElement("span");
+    nodo.className = "recorrido-nodo";
+    riel.appendChild(nodo);
+    caja.appendChild(riel);
+    document.body.appendChild(caja);
+    mapa = { caja: caja, puntos: puntos, tramo: tramo, activo: -2, pos: -1 };
+    /* el mapa se construye despues del primer pintado, asi que hay que
+       ponerlo al dia aqui o no marca nada hasta el primer scroll */
+    pintarMapa(window.pageYOffset);
+  }
+
+  var piePagina = null;
+  function pintarMapa(y) {
+    if (!mapa) return;
+    /* el mapa se retira al llegar al pie: sus etiquetas claras sobre el
+       bloque marino quedan fuera de sitio, y a esas alturas ya has llegado */
+    if (piePagina === null) piePagina = $(".pie") || false;
+    var enElPie = piePagina && piePagina.getBoundingClientRect().top < window.innerHeight * 0.8;
+    mapa.caja.classList.toggle("visible", y > 24 && !enElPie);
+
+    var n = mapa.puntos.length;
+    var linea = y + navH() + 8;
+    var idx = -1, i;
+    for (i = 0; i < n; i++) {
+      if (absTop(mapa.puntos[i].sec) <= linea) idx = i;
+    }
+
+    /* posicion del nodo: el tramo de la seccion actual mas lo que lleves
+       avanzado dentro de ella */
+    var pos;
+    if (idx < 0) {
+      pos = 0;
+    } else {
+      var desde = absTop(mapa.puntos[idx].sec) - navH();
+      var hasta = (idx + 1 < n)
+        ? absTop(mapa.puntos[idx + 1].sec) - navH()
+        : Math.max(desde + 1, html.scrollHeight - window.innerHeight);
+      var dentro = hasta > desde ? Math.min(1, Math.max(0, (y - desde) / (hasta - desde))) : 0;
+      pos = Math.min(1, (idx + dentro) * mapa.tramo);
+    }
+    if (pos !== mapa.pos) {
+      mapa.pos = pos;
+      mapa.caja.style.setProperty("--recorrido", pos.toFixed(4));
+    }
+
+    if (idx === mapa.activo) return;
+    mapa.activo = idx;
+    mapa.puntos.forEach(function (p, j) {
+      p.el.classList.toggle("pasado", j < idx);
+      p.el.classList.toggle("activo", j === idx);
+    });
+  }
+
+  /* ======================================================================
      11 · apariciones al entrar en pantalla
      ====================================================================== */
   function montarApariciones() {
@@ -729,7 +858,6 @@
      (si se monta antes, las alturas cambian y los ScrollTrigger quedan
      desplazados medio viewport).
      ====================================================================== */
-  var lenis = null;
   if (motion && typeof Lenis !== "undefined") {
     lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true });
     lenis.on("scroll", ScrollTrigger.update);
@@ -739,6 +867,7 @@
 
   function arrancar() {
     construirTrazas();
+    montarMapa();
     montarApariciones();
     entradaHero();
     latido();
@@ -756,6 +885,7 @@
     clearTimeout(temporizador);
     temporizador = setTimeout(function () {
       construirTrazas();
+      montarMapa();
       if (window.__calidadeRefrescarPila) window.__calidadeRefrescarPila();
       if (gsapReady) ScrollTrigger.refresh();
     }, 220);

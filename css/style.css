@@ -194,11 +194,82 @@ input, textarea { font: inherit; color: inherit; }
 }
 .nav-movil a:last-child { border-bottom: 0; color: var(--gris-txt); font-size: 1rem; }
 
+/* ------------------------------------------------- mapa de la placa
+   El avance del recorrido, en el idioma del sitio: un riel vertical con un
+   pad por seccion. El cobre sube, los pads que ya han pasado se encienden y
+   un nodo viaja por delante. Al acercar el raton salen las etiquetas y se
+   puede saltar a cualquier seccion.
+   En movil no cabe: alli queda la pista fina bajo la cabecera. */
+.recorrido {
+  position: fixed; right: clamp(0.9rem, 1.8vw, 1.9rem); top: 50%;
+  z-index: 140; display: none;
+  transform: translateY(-50%);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0.45s;
+}
+.recorrido.visible { opacity: 1; visibility: visible; }
+@media (min-width: 62rem) { .recorrido { display: block; } }
+
+.recorrido-riel {
+  position: relative;
+  width: 2px; height: min(46vh, 25rem);
+  background: var(--placa); border-radius: 2px;
+}
+.recorrido-cobre {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, var(--marino), var(--cian));
+  transform: scaleY(var(--recorrido, 0));
+  transform-origin: top center;
+  border-radius: 2px;
+}
+.recorrido-punto {
+  position: absolute; left: 50%;
+  width: 26px; height: 26px; padding: 0;
+  transform: translate(-50%, -50%);
+  display: grid; place-items: center;
+  background: none; border: 0;
+}
+.recorrido-pad {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--blanco); border: 2px solid #B9C6D6;
+  transition: background 0.35s ease, border-color 0.35s ease,
+              width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.recorrido-punto.pasado .recorrido-pad { background: var(--cian); border-color: var(--cian); }
+.recorrido-punto.activo .recorrido-pad {
+  width: 11px; height: 11px;
+  background: var(--cian); border-color: var(--cian);
+  box-shadow: 0 0 0 4px rgba(34, 181, 216, 0.16);
+}
+.recorrido-et {
+  position: absolute; right: calc(100% + 0.45rem); top: 50%;
+  transform: translateY(-50%) translateX(0.4rem);
+  white-space: nowrap; color: var(--gris-txt);
+  background: rgba(247, 249, 251, 0.92);
+  border: 1px solid var(--placa); border-radius: var(--radio);
+  padding: 0.2rem 0.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.26s ease, transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.recorrido:hover .recorrido-et,
+.recorrido-punto:focus-visible .recorrido-et,
+.recorrido-punto.activo .recorrido-et { opacity: 1; transform: translateY(-50%) translateX(0); }
+.recorrido-punto.activo .recorrido-et { color: var(--marino); border-color: var(--cian); }
+.recorrido-nodo {
+  position: absolute; left: 50%; top: calc(var(--recorrido, 0) * 100%);
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--cian);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 5px rgba(34, 181, 216, 0.14);
+  pointer-events: none;
+}
+
 /* ------------------------------------------------- avance del recorrido
-   Cuanto scroll llevas, en el idioma de la placa: una pista que se llena y
-   un nodo que la recorre. Se dibuja con transform:scaleX, no con
-   stroke-dasharray sobre un viewBox estirado: una barra recta estirada de
-   forma no uniforme rompe el truco del dasharray y sale a trozos. */
+   La pista fina bajo la cabecera. En escritorio manda el mapa de la placa,
+   asi que aqui solo queda para pantallas estrechas. Se dibuja con
+   transform:scaleX, no con stroke-dasharray sobre un viewBox estirado: una
+   barra recta deformada de forma no uniforme rompe el dasharray. */
 .progreso {
   position: fixed;
   top: calc(var(--nav-h) - 2px); left: 0; right: 0;
@@ -206,6 +277,7 @@ input, textarea { font: inherit; color: inherit; }
   opacity: 0; transition: opacity 0.3s ease;
 }
 .progreso.visible { opacity: 1; }
+@media (min-width: 62rem) { .progreso { display: none; } }
 .progreso-pista {
   display: block; height: 100%;
   background: linear-gradient(90deg, var(--marino), var(--cian));
@@ -643,8 +715,7 @@ input, textarea { font: inherit; color: inherit; }
 .map-consent-s { font-size: 0.85rem; color: var(--gris-txt); max-width: 30rem; }
 .mapa iframe { display: block; width: 100%; height: 20rem; border: 0; }
 
-.contacto-forma { display: grid; gap: clamp(1.5rem, 3vw, 2rem); }
-@media (min-width: 46rem) and (max-width: 61.99rem) { .contacto-forma { grid-template-columns: 1fr 15rem; align-items: start; } }
+.contacto-forma { display: grid; gap: clamp(1.5rem, 3vw, 2rem); align-content: start; }
 .forma {
   background: var(--blanco-puro); border: 1px solid var(--placa);
   border-top: 3px solid var(--cian);
@@ -669,7 +740,14 @@ input, textarea { font: inherit; color: inherit; }
 .campo .error { font-size: 0.78rem; color: #A3271A; font-family: var(--mono); }
 .forma-aviso { font-size: 0.78rem; color: var(--gris-txt); }
 .forma-aviso a { color: var(--marino); }
-.contacto-foto img { width: 100%; border-radius: var(--radio); border: 1px solid var(--placa); }
+/* Banda, no columna: con la proporcion fijada nunca se estira hacia abajo
+   para rellenar la fila del grid, que es lo que la hacia enorme en movil. */
+.contacto-foto { margin: 0; }
+.contacto-foto img {
+  width: 100%; height: auto;
+  aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: var(--radio); border: 1px solid var(--placa);
+}
 .contacto-foto figcaption { margin-top: 0.5rem; }
 
 /* ------------------------------------------------------------------ pie */
